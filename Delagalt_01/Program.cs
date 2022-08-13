@@ -2,11 +2,39 @@
 
 namespace Delagalt_01
 {
-    internal class Program
+    delegate int Muveletek(int x, int y);
+
+    class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Muveletek m = new Muveletek(Osszeadas);
+            m += Kivonas;
+            m += Szorzas;
+            m += Osztas;
+
+
+            
+        }
+
+        static int Osszeadas(int x, int y)
+        {
+            return x + y;
+        }
+
+        static int Kivonas(int x, int y)
+        {
+            return x - y;
+        }
+
+        static int Szorzas(int x, int y)
+        {
+            return x * y;
+        }
+
+        static int Osztas(int x, int y)
+        {
+            return x / y;
         }
     }
 }
