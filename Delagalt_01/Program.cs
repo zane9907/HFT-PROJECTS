@@ -59,12 +59,55 @@ namespace Delagalt_01
             sz.muvelet += m;
             sz.Szamol();
 
-            sz = null;
-
             //m -= Osszeadas;
             //m -= Kivonas;
             //m -= Szorzas;
             //m -= Osztas;
+
+
+
+            //Készítsünk egy Action delegáltat.
+            //Anonym függvénnyel adjuk hozzá a maradékos oszást.
+            Console.WriteLine("\nAction");
+            Action<int, int> mod = delegate (int x, int y)
+            {
+                Console.WriteLine($"Mod: {x % y}");
+            };
+
+            mod?.Invoke(sz.A, sz.B);
+
+
+
+
+            //Készítsünk egy Function delegáltat.
+            //Anonym függvénnyel adjuk vissza a számok átlagát
+            //Majd írassuk ki a konzolra az eredményt
+            Console.WriteLine("\nFunction");
+            Func<int, int, double> avg = delegate (int x, int y)
+            {
+                return (x + y) / 2;
+            };
+
+            double? average = avg?.Invoke(sz.A, sz.B);
+            Console.WriteLine($"Average: {average}");
+
+            //Készítsünk egy Predicate delegáltat.
+            //Anonym függvény segítségével adjon vissza igazat ha az átlag páros
+            //Majd írassuk ki a konzolra az eredményt
+            Console.WriteLine("\nPredicate");
+            Predicate<double?> paros = delegate (double? x)
+            {
+                return x % 2 == 0;
+            };
+
+            
+            Console.WriteLine(paros(average) ? "Páros" : "Páratlan");
+
+            //Ugyanezek Lambdával
+            //Action<int, int> modL = (x,y) =>
+            //{
+            //    Console.WriteLine($"Mod: {x % y}");
+            //}
 
             ;
 
