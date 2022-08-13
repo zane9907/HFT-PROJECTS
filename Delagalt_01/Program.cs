@@ -67,7 +67,7 @@ namespace Delagalt_01
 
 
             //Készítsünk egy Action delegáltat.
-            //Anonym függvénnyel adjuk hozzá a maradékos oszást.
+            //Anonym függvénnyel adjuk hozzá a maradékos oszást majd írassuk ki konzolra az eredményt.
             Console.WriteLine("\nAction");
             Action<int, int> mod = delegate (int x, int y)
             {
@@ -85,29 +85,59 @@ namespace Delagalt_01
             Console.WriteLine("\nFunction");
             Func<int, int, double> avg = delegate (int x, int y)
             {
-                return (x + y) / 2;
+                return (x + y) / 2d;
             };
 
             double? average = avg?.Invoke(sz.A, sz.B);
             Console.WriteLine($"Average: {average}");
 
             //Készítsünk egy Predicate delegáltat.
-            //Anonym függvény segítségével adjon vissza igazat ha az átlag páros
+            //Anonym függvény segítségével adjon vissza igazat ha a két szám összege páros
             //Majd írassuk ki a konzolra az eredményt
             Console.WriteLine("\nPredicate");
-            Predicate<double?> paros = delegate (double? x)
+            Predicate<int> paros = delegate (int x)
             {
                 return x % 2 == 0;
             };
 
             
-            Console.WriteLine(paros(average) ? "Páros" : "Páratlan");
+            Console.WriteLine(paros(sz.A + sz.B) ? "Páros" : "Páratlan");
+
+
 
             //Ugyanezek Lambdával
-            //Action<int, int> modL = (x,y) =>
-            //{
-            //    Console.WriteLine($"Mod: {x % y}");
-            //}
+
+            Console.WriteLine("\nAction Lambda");
+            Action<int, int> modL = (x, y) =>
+            {
+                Console.WriteLine($"Mod: {x % y}");
+            };
+
+            modL?.Invoke(sz.A, sz.B);
+
+
+            Console.WriteLine("\nFunction Lambda");
+            Func<int, int, double> avgL = (x, y) =>
+            {
+                return (x + y) / 2d;
+            };
+
+            double? averageL = avg?.Invoke(sz.A, sz.B);
+            Console.WriteLine($"Average: {averageL}");
+
+
+
+
+            Console.WriteLine("\nPredicate Lambda");
+            Predicate<int> parosL = x =>
+            {
+                return x % 2 == 0;
+            };
+
+
+            Console.WriteLine(parosL(sz.A + sz.B) ? "Páros" : "Páratlan");
+
+
 
             ;
 
