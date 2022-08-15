@@ -30,19 +30,39 @@ namespace XML_JSON_LINQ_02
         {
 
         }
+
+        
+
     }
 
     class Program
     {
         static void Main(string[] args)
         {
-            List<CD> catalog = new List<CD>();
+            var catalogXML = DeserializeXML("cd_catalog.xml");
+            var catalogJSON = DeserializeJSON("cd_catalog.json");
+            
 
-            XDocument xdoc = XDocument.Load("cd_catalog.xml");
+            
+            ;
+
+        }
+
+        static List<CD> DeserializeJSON(string file)
+        {
+            string json = File.ReadAllText(file);
+            return JsonConvert.DeserializeObject<List<CD>>(json);
+        }
+
+        static List<CD> DeserializeXML(string file)
+        {
+            List<CD> tmp = new List<CD>();
+
+            XDocument xdoc = XDocument.Load(file);
 
             foreach (var item in xdoc.Root.Elements())
             {
-                catalog.Add(new CD()
+                tmp.Add(new CD()
                 {
                     Title = item.Element("TITLE").Value,
                     Artist = item.Element("ARTIST").Value,
@@ -53,9 +73,7 @@ namespace XML_JSON_LINQ_02
                 });
             }
 
-            
-            ;
-
+            return tmp;
         }
     }
 }
