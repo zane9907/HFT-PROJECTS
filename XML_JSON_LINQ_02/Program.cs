@@ -39,13 +39,46 @@ namespace XML_JSON_LINQ_02
     {
         static void Main(string[] args)
         {
-            var catalogXML = DeserializeXML("cd_catalog.xml");
-            var catalogJSON = DeserializeJSON("cd_catalog.json");
-            
+            //var catalog = DeserializeXML("cd_catalog.xml");
+            var catalog = DeserializeJSON("cd_catalog.json");
+
+
+            string choice = "";
+            do
+            {
+                catalog.Add(CreateCD());
+                Console.WriteLine("Do you want to add more? y/n");
+                choice = Console.ReadLine();
+            } while (choice == "y");
 
             
+
             ;
 
+        }
+
+        static CD CreateCD()
+        {
+            CD c = new CD();
+            Console.Write("Title: ");
+            c.Title = Console.ReadLine();
+
+            Console.Write("Artist: ");
+            c.Artist = Console.ReadLine();
+
+            Console.Write("Country: ");
+            c.Country = Console.ReadLine();
+
+            Console.Write("Company: ");
+            c.Company = Console.ReadLine();
+
+            Console.Write("Price: ");
+            c.Price = double.Parse(Console.ReadLine());
+
+            Console.Write("Year: ");
+            c.Year = int.Parse(Console.ReadLine());
+
+            return c;
         }
 
         static List<CD> DeserializeJSON(string file)
@@ -53,6 +86,7 @@ namespace XML_JSON_LINQ_02
             string json = File.ReadAllText(file);
             return JsonConvert.DeserializeObject<List<CD>>(json);
         }
+
 
         static List<CD> DeserializeXML(string file)
         {
