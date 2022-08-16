@@ -28,7 +28,6 @@ namespace XML_JSON_LINQ_02
 
         public CD()
         {
-
         }
 
         public override string ToString()
@@ -38,10 +37,33 @@ namespace XML_JSON_LINQ_02
 
     }
 
+    class Country
+    {
+        public string Name { get; set; }
+        public int CDCount { get; set; }
+        public double AvgPrice { get; set; }
+        public List<string> Artists { get; set; }
+
+        public Country(string name, int cDCount, double avgPrice, List<string> artists)
+        {
+            Name = name;
+            CDCount = cDCount;
+            AvgPrice = avgPrice;
+            Artists = artists;
+        }
+
+        public Country()
+        {
+        }
+    }
+
+
     class Program
     {
         static void Main(string[] args)
         {
+
+            //Deserialize
             //var catalog = DeserializeXML("cd_catalog.xml");
             var catalog = DeserializeJSON("cd_catalog.json");
 
@@ -147,60 +169,75 @@ namespace XML_JSON_LINQ_02
                                       AVG = Math.Round(g.Average(x => x.Price),2)
                                   }).ToList();
 
+
+            //8. Csoportosítsuk az elemeket ország szerint, majd hozzunk létre egy országokat tartalmazó listát.
+            //   Adjuk meg a megfelelő adatokat.
+            var countriesMethod = catalog.GroupBy(x => x.Country).Select(y => new Country()
+            {
+                Name = y.Key,
+                CDCount = y.Count(),
+                AvgPrice = Math.Round(y.Average(x => x.Price),2),
+                Artists = y.Select(a => a.Artist).ToList()
+            }).ToList();
+
+            var countriesQuery = (from x in catalog
+                                  group x by x.Country into g
+                                  select new Country()
+                                  {
+                                      Name = g.Key,
+                                      CDCount = g.Count(),
+                                      AvgPrice = Math.Round(g.Average(x => x.Price), 2),
+                                      Artists = g.Select(g => g.Artist).ToList()
+                                  }).ToList();
+
+
+            //Serialize (XML, JSON)
+            SerializeXML(countriesMethod);
+            SerializeJson(countriesQuery);
+
+
             ;
-
-
-
-
-
-
-
-            //string choice = "";
-            //do
-            //{
-            //    catalog.Add(CreateCD());
-            //    Console.WriteLine("Do you want to add more? y/n");
-            //    choice = Console.ReadLine();
-
-
-            //} while (choice == "y");
-
-
-
-            
-
         }
+       
 
-        static CD CreateCD()
+        static void SerializeJson(List<Country> countries)
         {
-            CD c = new CD();
-            Console.Write("Title: ");
-            c.Title = Console.ReadLine();
-
-            Console.Write("Artist: ");
-            c.Artist = Console.ReadLine();
-
-            Console.Write("Country: ");
-            c.Country = Console.ReadLine();
-
-            Console.Write("Company: ");
-            c.Company = Console.ReadLine();
-
-            Console.Write("Price: ");
-            c.Price = double.Parse(Console.ReadLine());
-
-            Console.Write("Year: ");
-            c.Year = int.Parse(Console.ReadLine());
-
-            return c;
+            string json = JsonConvert.SerializeObject(countries,Formatting.Indented);
+            File.WriteAllText("output.json", json);
         }
+
+        static void SerializeXML(List<Country> countries)
+        {
+            XDocument xdoc = new XDocument();
+
+            xdoc.Add(new XElement("countries"));
+            foreach (var country in countries)
+            {
+                XElement xcountry = new XElement("country");
+                xcountry.Add(new XElement("name",country.Name));
+                xcountry.Add(new XElement("cdcount", country.CDCount));
+                xcountry.Add(new XElement("avgprice", country.AvgPrice));
+
+                XElement xartists = new XElement("artists");
+                foreach (var artist in country.Artists)
+                {
+                    xartists.Add(new XElement("artist", artist));
+                }
+
+                xcountry.Add(xartists);
+                xdoc.Root.Add(xcountry);
+            }
+
+            xdoc.Save("output.xml");
+        }
+
+
 
         static List<CD> DeserializeJSON(string file)
         {
             string json = File.ReadAllText(file);
             return JsonConvert.DeserializeObject<List<CD>>(json);
         }
-
 
         static List<CD> DeserializeXML(string file)
         {
