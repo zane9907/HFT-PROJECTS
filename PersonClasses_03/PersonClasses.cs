@@ -39,12 +39,14 @@ namespace PersonClasses_03
 
         public override void Do()
         {
-            Console.WriteLine($"[{NeptunID}] need more credits.");
+            Console.WriteLine($"[{NeptunID}] Need more credits.");
         }
     }
 
     public class Retired : Person
     {
+        public int SulejmanEpisodes { get; set; }
+
         public override void Do()
         {
             Console.WriteLine("Watching Szulejmán all day.");
