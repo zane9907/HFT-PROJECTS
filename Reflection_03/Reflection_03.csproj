@@ -5,4 +5,8 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PersonClasses_03\PersonClasses_03.csproj" />
+  </ItemGroup>
+
 </Project>
